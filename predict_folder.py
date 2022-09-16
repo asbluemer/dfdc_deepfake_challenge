@@ -20,14 +20,14 @@ if __name__ == '__main__':
     models = []
     model_paths = [os.path.join(args.weights_dir, model) for model in args.models]
     for path in model_paths:
-        model = DeepFakeClassifier(encoder="tf_efficientnet_b7_ns").to("cuda")
+        model = DeepFakeClassifier(encoder="tf_efficientnet_b7_ns")
         print("loading state dict {}".format(path))
         checkpoint = torch.load(path, map_location="cpu")
         state_dict = checkpoint.get("state_dict", checkpoint)
         model.load_state_dict({re.sub("^module.", "", k): v for k, v in state_dict.items()}, strict=True)
         model.eval()
         del checkpoint
-        models.append(model.half())
+        models.append(model)
 
     frames_per_video = 32
     video_reader = VideoReader()
